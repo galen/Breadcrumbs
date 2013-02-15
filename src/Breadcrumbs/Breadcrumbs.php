@@ -73,12 +73,13 @@ class Breadcrumbs {
      * 
      * @param string $html Breadcrumbs wrapper html
      * @access public
-     * @return void
+     * @return Breadcrumbs
      */
     public function setBreadcrumbsHtml( $html ) {
         $required_variables = array( '{breadcrumbs}' );
         $this->checkRequiredHtmlText( $required_variables, $html );
         $this->breadcrumbs_html = $html;
+        return $this;
     }
 
     /**
@@ -92,12 +93,13 @@ class Breadcrumbs {
      * 
      * @param string $html Breadcrumb wrapper html
      * @access public
-     * @return void
+     * @return Breadcrumbs
      */
     public function setBreadcrumbHtml( $html ) {
         $required_variables = array( '{text}', '{link}' );
         $this->checkRequiredHtmlText( $required_variables, $html );
         $this->breadcrumb_html = $html;
+        return $this;
     }
 
     /**
@@ -111,12 +113,13 @@ class Breadcrumbs {
      * 
      * @param string $html Active breadcrumb html
      * @access public
-     * @return void
+     * @return Breadcrumbs
      */
     public function setActiveBreadcrumbHtml( $html ) {
         $required_variables = array( '{breadcrumb}' );
         $this->checkRequiredHtmlText( $required_variables, $html );
         $this->active_breadcrumb_html = $html;
+        return $this;
     }
 
     /**
@@ -128,10 +131,11 @@ class Breadcrumbs {
      * 
      * @param string $html Breadcrumb separator html
      * @access public
-     * @return void
+     * @return Breadcrumbs
      */
     public function setBreadcrumbSeparatorHtml( $html ) {
         $this->breadcrumb_separator_html = $html;
+        return $this;
     }
 
     /**
@@ -205,7 +209,7 @@ class Breadcrumbs {
      * @param string $url Url to extract breadcrumbs from
      * @param mixed $breadcrumb_text_callback Function to run each breadcrumb through
      * @access public
-     * @return void
+     * @return Breadcrumbs
      */
     public function addBreadcrumbsFromUrl( $url, $breadcrumb_text_callback ) {
         $url_parts = explode( '/', trim( $url, '/' ) );
@@ -214,6 +218,7 @@ class Breadcrumbs {
             $current_url .= $url_part . '/';
             $this->addBreadcrumb( call_user_func( $breadcrumb_text_callback, $url_part ), $index == count( $url_parts ) - 1 ? null : $current_url );
         }
+        return $this;
     }
 
     /**
@@ -225,28 +230,26 @@ class Breadcrumbs {
      * @param string $breadcrumb_link Breadcrumb link
      * @param array $breadcrumb_vars extra variables passed to the breadcrumb
      * @access public
-     * @return Breadcrumb Returns the newly created breadcrumb
+     * @return Breadcrumbs
      */
     public function addBreadcrumb( $breadcrumb_text, $breadcrumb_link = null, array $breadcrumb_vars = null ) {
-        return $this->breadcrumbs[] = new Breadcrumb( $breadcrumb_text, $breadcrumb_link, $breadcrumb_vars );
+        $this->breadcrumbs[] = new Breadcrumb( $breadcrumb_text, $breadcrumb_link, $breadcrumb_vars );
+        return $this;
     }
 
     /**
      * Insert a breadcrumb
      *
      * Insert a breadcrumb into a specific position
-     *
+     * 
      * @param int $position Position in the stack to insert the breadcrumb into
      * @param string $breadcrumb_text Breadcrumb text
      * @param string $breadcrumb_link Breadcrumb link
      * @param array $breadcrumb_vars extra variables passed to the breadcrumb
      * @access public
-     * @return mixed False on error, Breadcrumb on success
+     * @return Breadcrumbs
      */
     public function insertBreadcrumb( $position, $breadcrumb_text, $breadcrumb_link = null, array $breadcrumb_vars = null ) {
-        if ( $position < 0 || $position > count( $this->breadcrumbs ) ) {
-            return false;
-        }
         $breadcrumb = new Breadcrumb( $breadcrumb_text, $breadcrumb_link, $breadcrumb_vars );
         array_splice(
             $this->breadcrumbs,
@@ -256,18 +259,21 @@ class Breadcrumbs {
                 $breadcrumb
             )
         );
-        return true;
+        return $this;
     }
 
     /**
      * Delete a breadcrumb
+     *
+     * 
      * 
      * @param int $position Position of the breadcrumb to be deleted
      * @access public
-     * @return Breadcrumb Returns the deleted breadcrumb
+     * @return Breadcrumbs
      */
     public function deleteBreadcrumb( $position ) {
-        return array_splice( $this->breadcrumbs, $position, 1 );
+        array_splice( $this->breadcrumbs, $position, 1 );
+        return $this;
     }
 
     /**
@@ -278,10 +284,11 @@ class Breadcrumbs {
      * @param string $breadcrumb_link Breadcrumb link
      * @param array $breadcrumb_vars extra variables passed to the breadcrumb
      * @access public
-     * @return Breadcrumb Returns the replaced breadcrumb
+     * @return Breadcrumbs
      */
     public function replaceBreadcrumb( $position, $breadcrumb_text, $breadcrumb_link = null, array $breadcrumb_vars = null ) {
-        return array_splice( $this->breadcrumbs, $position, 1, array ( new Breadcrumb( $breadcrumb_text, $breadcrumb_link, $breadcrumb_vars ) ) );
+        array_splice( $this->breadcrumbs, $position, 1, array ( new Breadcrumb( $breadcrumb_text, $breadcrumb_link, $breadcrumb_vars ) ) );
+        return $this;
     }
 
     /**
